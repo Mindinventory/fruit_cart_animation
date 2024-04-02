@@ -2,8 +2,10 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:add_to_cart_animation/custom_product_card.dart';
 import 'package:add_to_cart_animation/model.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:snappable_thanos/snappable_thanos.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -30,22 +32,22 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
   late AnimationController controller;
   late Animation<double> animation;
 
-  final double totalPrice = 0;
+  double totalPrice = 0.0;
   final scrollController = ScrollController();
   double cartLength = 0;
 
   void scrollAfter(ScrollController scrollController, {required int milliseconds, Offset}) {
     Future.delayed(Duration(milliseconds: milliseconds), () {
       var offset = Offset;
-      var scrollDuration = const Duration(milliseconds: 600);
+      var scrollDuration = const Duration(milliseconds: 700);
       scrollController.animateTo(offset, duration: scrollDuration, curve: Curves.ease);
     });
   }
 
   @override
   void initState() {
-    controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
-    animation = Tween<double>(begin: 0, end: 1).animate(controller);
+    controller = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
+    animation = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOutCubic)).animate(controller);
 
     super.initState();
   }
@@ -91,6 +93,7 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
                       if (productItemList[index].itemInCart! > 0 && productItemList[index].itemInCart! != 0) {
                         setState(() {
                           productItemList[index].itemInCart = (productItemList[index].itemInCart! - 1);
+                          totalPrice = totalPrice - (double.parse(productItemList[index].price));
                           if (cartItem.contains(productItemList[index]) && productItemList[index].itemInCart! < 1) {
                             cartItem.remove(productItemList[index]);
                           }
@@ -100,15 +103,18 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
                     onIncrementPress: () {
                       setState(() {
                         productItemList[index].itemInCart = (productItemList[index].itemInCart! + 1);
+                        totalPrice = totalPrice + (double.parse(productItemList[index].price));
+
                         if (!cartItem.contains(productItemList[index])) {
                           if (cartLength > MediaQuery.of(context).size.width) {
-                            scrollAfter(scrollController, milliseconds: 500, Offset: MediaQuery.of(context).size.width);
+                            scrollAfter(scrollController, milliseconds: 0, Offset: MediaQuery.of(context).size.width);
                             controller.value = 0;
                           }
                           cartItem.add(productItemList[index]);
+
                           Future.delayed(
                               cartLength > MediaQuery.of(context).size.width
-                                  ? const Duration(seconds: 1)
+                                  ? const Duration(milliseconds: 0)
                                   : const Duration(seconds: 0),
                               () => showAnimation(context, productItemList[index].key, productItemList[index].image,
                                   animation, controller, cartItem, cartLength));
@@ -141,82 +147,106 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
                     scrollDirection: Axis.horizontal,
                     itemCount: cartItem.length,
                     itemBuilder: (BuildContext context, int index) {
-                      cartLength = index == 0 ? 86 : (86 + (index * 78));
+                      cartLength = index == 0 ? 86 : (86 + (index * 86) + 70);
 
                       return AnimatedBuilder(
-                          animation: animation,
+                          animation: Listenable.merge([animation]),
                           builder: (context, child) {
                             // double dx = lerpDouble((((index - 2) * 8) + ((index - 3) * 70)),
                             //     (((index - 1) * 8) + ((index - 2) * 70)), animation.value)!;
+                            double dx = lerpDouble(-86, 0, animation.value)!;
+                            // double scale = lerpDouble(0, 0, scaleAnimation.value)!;
 
-                            return Stack(
-                              children: [
-                                Container(
-                                  width: 70,
-                                  height: 70,
-                                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: (controller.value != 1 && cartItem.length - 1 == index)
-                                      ? const Offstage()
-                                      : Image.asset(
-                                          key: GlobalObjectKey('${cartItem[index].name.hashCode}_cart'),
-                                          cartItem[index].image,
-                                          height: 50,
-                                          width: 50,
-                                        ),
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (cartItem[index].itemInCart! == 1) {
-                                        setState(() {
-                                          cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
-                                          cartItem.remove(cartItem[index]);
-                                        });
-                                      } else if (cartItem[index].itemInCart! > 0) {
-                                        setState(() {
-                                          cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                            boxShadow: kElevationToShadow[2],
-                                            color: Colors.white,
-                                            shape: BoxShape.circle),
-                                        child: const Icon(
-                                          Icons.delete,
-                                          size: 16,
-                                          color: Colors.red,
-                                        )),
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 35,
-                                  bottom: 0,
-                                  child: Container(
-                                      width: 20,
-                                      height: 20,
+                            return Transform.translate(
+                              offset:
+                                  controller.value != 1 && cartItem.length - 1 == index ? Offset(dx, 0) : Offset(0, 0),
+                              child: Snappable(
+                                key: GlobalObjectKey(cartItem[index]),
+                                duration: const Duration(seconds: 2),
+                                onSnapped: () {
+                                  setState(() {
+                                    totalPrice = totalPrice - (double.parse(cartItem[index].price));
+                                    cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
+                                    cartItem.remove(cartItem[index]);
+                                  });
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 70,
+                                      height: 70,
+                                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                                      padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                          boxShadow: kElevationToShadow[2],
-                                          color: Colors.black87,
-                                          shape: BoxShape.circle),
-                                      child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            cartItem[index].itemInCart.toString(),
-                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                          ))),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: (controller.value != 1 && cartItem.length - 1 == index)
+                                          ? const Offstage()
+                                          : Image.asset(
+                                              key: GlobalObjectKey('${cartItem[index].name.hashCode}_cart'),
+                                              cartItem[index].image,
+                                              height: 50,
+                                              width: 50,
+                                            ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      child: Opacity(
+                                        opacity: cartItem.length - 1 == index ? controller.value : 1,
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (cartItem[index].itemInCart == 1) {
+                                              (GlobalObjectKey(cartItem[index]).currentState as SnappableState)
+                                                  .snap()
+                                                  .then((value) {});
+                                            } else if (cartItem[index].itemInCart! > 0) {
+                                              setState(() {
+                                                totalPrice = totalPrice - (double.parse(cartItem[index].price));
+                                                cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                              width: 24,
+                                              height: 24,
+                                              decoration: BoxDecoration(
+                                                  boxShadow: kElevationToShadow[2],
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle),
+                                              child: const Icon(
+                                                Icons.remove_circle,
+                                                size: 16,
+                                                color: Colors.red,
+                                              )),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 35,
+                                      bottom: 0,
+                                      child: Opacity(
+                                        opacity: cartItem.length - 1 == index ? controller.value : 1,
+                                        child: Container(
+                                            width: 20,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                                boxShadow: kElevationToShadow[2],
+                                                color: Colors.black87,
+                                                shape: BoxShape.circle),
+                                            child: Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  cartItem[index].itemInCart.toString(),
+                                                  style:
+                                                      const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                ))),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             );
                           });
                     },
