@@ -2,7 +2,12 @@ part of 'product_bloc.dart';
 
 abstract class ProductEvent {}
 
-class OnIncrementEvent extends ProductEvent {}
+class OnIncrementEvent extends ProductEvent {
+  final Product product;
+  final List<Product> cartItemList;
+
+  OnIncrementEvent({required this.product, required this.cartItemList});
+}
 
 class OnDecrementEvent extends ProductEvent {
   final Product product;
@@ -11,4 +16,6 @@ class OnDecrementEvent extends ProductEvent {
   OnDecrementEvent({required this.product, required this.cartItemList});
 }
 
-class OnUpdatingCartEvent extends ProductEvent {}
+class OnAddingCartEvent extends ProductEvent{
+
+}

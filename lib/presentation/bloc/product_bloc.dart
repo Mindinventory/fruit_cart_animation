@@ -8,6 +8,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(ProductInitial()) {
     // on<OnIncrementEvent>(increment);
     on<OnDecrementEvent>(_decrement);
+    on<OnIncrementEvent>(_increment);
+    on<OnAddingCartEvent>(_cartUpdating);
     // on<OnUpdatingCartEvent>(UpdateCart);
     // on<AddMessageEvent>(_addMessage);
     // on<UpdateMessageEvent>(_updateMessage);
@@ -23,6 +25,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     //     print( error.toString());
     //   }
     // }
+  }
+
+  void _increment (OnIncrementEvent event, Emitter<ProductState> emit) async {
+    try {
+      event.product.itemInCart = (event.product.itemInCart! + 1);
+      if (!event.cartItemList.contains(event.product)) {
+        emit(CartAddedState(
+          product: event.product,
+          cartItemList: event.cartItemList,
+        ));
+      }
+
+    } catch (error) {
+      print(error.toString());
+    }
   }
   void _decrement(OnDecrementEvent event, Emitter<ProductState> emit) async {
     try {
@@ -42,4 +59,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       print(error.toString());
     }
   }
+
+  void _cartUpdating(OnAddingCartEvent event, Emitter<ProductState> emit) async {
+    try {
+      emit(OnAddingCartState());
+
+    } catch (error) {
+      print(error.toString());
+ }
+}
+
 }

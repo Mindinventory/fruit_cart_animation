@@ -1,7 +1,9 @@
 part of 'product_bloc.dart';
 
-abstract class ProductState {}
 
+
+
+abstract class ProductState {}
 class ProductInitial extends ProductState {}
 
 class OnIncrementedState extends ProductState {}
@@ -13,4 +15,11 @@ class OnDecrementedState extends ProductState {
   OnDecrementedState({required this.product, required this.cartItemList});
 }
 
-class OnUpdatedCartState extends ProductState {}
+class OnAddingCartState extends ProductState {}
+
+class CartAddedState extends  ProductState {
+  final Product product;
+  final List<Product> cartItemList;
+
+  CartAddedState({required this.product, required this.cartItemList});
+}

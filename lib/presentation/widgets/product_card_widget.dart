@@ -5,29 +5,30 @@ import 'package:fruit_cart_animation/model/product.dart';
 import 'package:fruit_cart_animation/presentation/bloc/product_bloc.dart';
 
 class CustomProductCard extends StatefulWidget {
-  final VoidCallback onIncrementPress;
   final Product product;
 
   final List<Product> cartItem;
+  final GlobalKey globalKey;
 
   const CustomProductCard({
     super.key,
-    required this.onIncrementPress,
     required this.cartItem,
-    required this.product,
+    required this.product, required this.globalKey,
   });
 
   @override
   State<CustomProductCard> createState() => _CustomProductCardState();
 }
 
-class _CustomProductCardState extends State<CustomProductCard> with TickerProviderStateMixin {
+class _CustomProductCardState extends State<CustomProductCard>
+    with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation animation;
 
   @override
   void initState() {
-    controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1500), vsync: this);
     animation = Tween(begin: 0, end: 1).animate(controller);
 
     super.initState();
@@ -56,7 +57,7 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
               Align(
                 alignment: Alignment.center,
                 child: Image.asset(
-                  key: widget.product.key,
+                  key: widget.globalKey,
                   widget.product.image,
                   height: AppConstants.productImageHeight,
                 ),
@@ -76,14 +77,19 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                           Text(
                             overflow: TextOverflow.ellipsis,
                             widget.product.name,
-                            style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           Text(
                             "₹ ${widget.product.price}/KG",
-                            style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -101,9 +107,10 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                         children: [
                           InkWell(
                               onTap: () {
-                                context
-                                    .read<ProductBloc>()
-                                    .add(OnDecrementEvent(cartItemList: widget.cartItem, product: widget.product));
+                                context.read<ProductBloc>().add(
+                                    OnDecrementEvent(
+                                        cartItemList: widget.cartItem,
+                                        product: widget.product));
                               },
                               child: const Icon(
                                 Icons.remove,
@@ -111,15 +118,24 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                                 size: 16,
                               )),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Colors.white),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 3, vertical: 2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: Colors.white),
                             child: Text(
                               widget.product.itemInCart.toString(),
-                              style: const TextStyle(color: Colors.black, fontSize: 12),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 12),
                             ),
                           ),
                           InkWell(
-                              onTap: widget.onIncrementPress,
+                              onTap: () {
+                                context.read<ProductBloc>().add(
+                                    OnIncrementEvent(
+                                        cartItemList: widget.cartItem,
+                                        product: widget.product));
+                              },
                               child: const Icon(
                                 Icons.add,
                                 color: Colors.white,
