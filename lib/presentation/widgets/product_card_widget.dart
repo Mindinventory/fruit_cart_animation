@@ -1,7 +1,6 @@
-import 'dart:ui';
-
-import 'package:add_to_cart_animation/model.dart';
 import 'package:flutter/material.dart';
+import 'package:fruit_cart_animation/common/constants.dart';
+import 'package:fruit_cart_animation/model/product.dart';
 
 class CustomProductCard extends StatefulWidget {
   final String image;
@@ -32,7 +31,6 @@ class CustomProductCard extends StatefulWidget {
 class _CustomProductCardState extends State<CustomProductCard> with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation animation;
-  double previousPosition = 0;
 
   @override
   void initState() {
@@ -52,7 +50,7 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
   Widget build(BuildContext context) {
     return InkWell(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        padding: AppConstants.kProductContainerPadding,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.withOpacity(0.3)),
           color: Colors.white,
@@ -65,7 +63,7 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
               child: Image.asset(
                 key: widget.globalKey,
                 widget.image,
-                height: 75,
+                height: AppConstants.productImageHeight,
               ),
             ),
             const SizedBox(
@@ -139,68 +137,4 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
       ),
     );
   }
-}
-
-void showAnimation(
-  BuildContext context,
-  GlobalKey key,
-  String image,
-  Animation<double> animation,
-  AnimationController controller,
-  List<Product> cartItem,
-  double cartLength,
-) {
-  final box = key.currentContext?.findRenderObject() as RenderBox?;
-  if (box == null || !box.attached) return; // Check if the widget is still attached
-
-  final size = box.size;
-  final Offset offset = box.localToGlobal(Offset.zero);
-  final firstContainerOffset = MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height / 4);
-  OverlayState overlayState = Overlay.of(context, rootOverlay: true);
-
-  animation = Tween<double>(begin: 0, end: 1).animate(controller);
-
-  OverlayEntry overlayEntry = OverlayEntry(
-    builder: (context) {
-      return AnimatedBuilder(
-        animation: animation,
-        builder: (context, child) {
-          double translateY = lerpDouble(offset.dy, firstContainerOffset, animation.value)! + 20;
-          double translateX;
-          if (cartLength < MediaQuery.of(context).size.width) {
-            translateX = lerpDouble(offset.dx,
-                (cartItem.length == 1 ? 18 : (((cartItem.length - 1) * (70 + 16)) + (18))), animation.value)!;
-          } else {
-            translateX = lerpDouble(offset.dx, MediaQuery.of(context).size.width - (50 + 20), animation.value)!;
-          }
-
-          double interpolatedWidth = lerpDouble(size.width, 50, animation.value)!;
-          double interpolatedHeight = lerpDouble(size.height, 50, animation.value)!;
-
-          return Positioned(
-            top: translateY,
-            left: translateX,
-            child: Image.asset(
-              image,
-              width: interpolatedWidth,
-              height: interpolatedHeight,
-            ),
-          );
-        },
-      );
-    },
-  );
-
-  overlayState.insert(overlayEntry);
-  controller.forward(from: 0);
-
-  animation.addStatusListener((status) {
-    if (status == AnimationStatus.completed) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        if (overlayEntry.mounted) {
-          overlayEntry.remove();
-        }
-      });
-    }
-  });
 }

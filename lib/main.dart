@@ -1,5 +1,5 @@
-import 'package:add_to_cart_animation/product_page.dart';
 import 'package:flutter/material.dart';
+import 'package:fruit_cart_animation/presentation/pages/product_page.dart';
 
 void main() {
   runApp(const MyApp());

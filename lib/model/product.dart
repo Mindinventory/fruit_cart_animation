@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'model.g.dart';
+part 'product.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Product {

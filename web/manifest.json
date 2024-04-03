@@ -1,6 +1,6 @@
 {
-    "name": "add_to_cart_animation",
-    "short_name": "add_to_cart_animation",
+    "name": "fruit_cart_animation",
+    "short_name": "fruit_cart_animation",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

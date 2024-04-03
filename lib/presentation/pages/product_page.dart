@@ -1,11 +1,14 @@
-import 'dart:math';
 import 'dart:ui';
-import 'package:add_to_cart_animation/custom_product_card.dart';
-import 'package:add_to_cart_animation/model.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fruit_cart_animation/common/common_methods.dart';
+import 'package:fruit_cart_animation/common/constants.dart';
+import 'package:fruit_cart_animation/model/product.dart';
+import 'package:fruit_cart_animation/presentation/widgets/circular_icon_button.dart';
+
 import 'package:snappable_thanos/snappable_thanos.dart';
+
+import '../widgets/product_card_widget.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -36,12 +39,8 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
   final scrollController = ScrollController();
   double cartLength = 0;
 
-  void scrollAfter(ScrollController scrollController, {required int milliseconds, Offset}) {
-    Future.delayed(Duration(milliseconds: milliseconds), () {
-      var offset = Offset;
-      var scrollDuration = const Duration(milliseconds: 700);
-      scrollController.animateTo(offset, duration: scrollDuration, curve: Curves.ease);
-    });
+  void _scrollAfter(ScrollController scrollController, double offset) {
+    scrollController.animateTo(offset, duration: const Duration(milliseconds: 700), curve: Curves.ease);
   }
 
   @override
@@ -107,7 +106,9 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
 
                         if (!cartItem.contains(productItemList[index])) {
                           if (cartLength > MediaQuery.of(context).size.width) {
-                            scrollAfter(scrollController, milliseconds: 0, Offset: MediaQuery.of(context).size.width);
+                            Future.delayed(const Duration(milliseconds: 200), () {
+                              _scrollAfter(scrollController, scrollController.position.maxScrollExtent);
+                            });
                             controller.value = 0;
                           }
                           cartItem.add(productItemList[index]);
@@ -147,19 +148,21 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
                     scrollDirection: Axis.horizontal,
                     itemCount: cartItem.length,
                     itemBuilder: (BuildContext context, int index) {
-                      cartLength = index == 0 ? 86 : (86 + (index * 86) + 70);
+                      cartLength = index == 0
+                          ? ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)
+                          : (((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth) +
+                              (index * ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)) +
+                              AppConstants.cardWidth);
 
                       return AnimatedBuilder(
-                          animation: Listenable.merge([animation]),
+                          animation: animation,
                           builder: (context, child) {
-                            // double dx = lerpDouble((((index - 2) * 8) + ((index - 3) * 70)),
-                            //     (((index - 1) * 8) + ((index - 2) * 70)), animation.value)!;
                             double dx = lerpDouble(-86, 0, animation.value)!;
-                            // double scale = lerpDouble(0, 0, scaleAnimation.value)!;
 
                             return Transform.translate(
-                              offset:
-                                  controller.value != 1 && cartItem.length - 1 == index ? Offset(dx, 0) : Offset(0, 0),
+                              offset: controller.value != 1 && cartItem.length - 1 == index
+                                  ? Offset(dx, 0)
+                                  : const Offset(0, 0),
                               child: Snappable(
                                 key: GlobalObjectKey(cartItem[index]),
                                 duration: const Duration(seconds: 2),
@@ -194,55 +197,44 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
                                       top: 0,
                                       left: 0,
                                       child: Opacity(
-                                        opacity: cartItem.length - 1 == index ? controller.value : 1,
-                                        child: InkWell(
-                                          onTap: () {
-                                            if (cartItem[index].itemInCart == 1) {
-                                              (GlobalObjectKey(cartItem[index]).currentState as SnappableState)
-                                                  .snap()
-                                                  .then((value) {});
-                                            } else if (cartItem[index].itemInCart! > 0) {
-                                              setState(() {
-                                                totalPrice = totalPrice - (double.parse(cartItem[index].price));
-                                                cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                              width: 24,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                  boxShadow: kElevationToShadow[2],
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle),
-                                              child: const Icon(
-                                                Icons.remove_circle,
-                                                size: 16,
-                                                color: Colors.red,
-                                              )),
-                                        ),
-                                      ),
+                                          opacity: cartItem.length - 1 == index ? controller.value : 1,
+                                          child: CircularIconButton(
+                                            onTap: () {
+                                              if (cartItem[index].itemInCart == 1) {
+                                                (GlobalObjectKey(cartItem[index]).currentState as SnappableState)
+                                                    .snap()
+                                                    .then((value) {});
+                                              } else if (cartItem[index].itemInCart! > 0) {
+                                                setState(() {
+                                                  totalPrice = totalPrice - (double.parse(cartItem[index].price));
+                                                  cartItem[index].itemInCart = cartItem[index].itemInCart! - 1;
+                                                });
+                                              }
+                                            },
+                                            decorationColor: Colors.white,
+                                            child: const Icon(
+                                              Icons.remove_circle,
+                                              size: 16,
+                                              color: Colors.red,
+                                            ),
+                                          )),
                                     ),
                                     Positioned(
                                       right: 35,
                                       bottom: 0,
                                       child: Opacity(
-                                        opacity: cartItem.length - 1 == index ? controller.value : 1,
-                                        child: Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                                boxShadow: kElevationToShadow[2],
-                                                color: Colors.black87,
-                                                shape: BoxShape.circle),
-                                            child: Align(
-                                                alignment: Alignment.center,
+                                          opacity: cartItem.length - 1 == index ? controller.value : 1,
+                                          child: CircularIconButton(
+                                              decorationColor: Colors.black87,
+                                              onTap: () {},
+                                              child: Align(
+                                                alignment: Alignment.bottomCenter,
                                                 child: Text(
                                                   cartItem[index].itemInCart.toString(),
                                                   style:
                                                       const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                ))),
-                                      ),
+                                                ),
+                                              ))),
                                     ),
                                   ],
                                 ),

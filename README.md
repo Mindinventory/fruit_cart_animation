@@ -1,4 +1,4 @@
-# add_to_cart_animation
+# fruit_cart_animation
 
 A new Flutter project.
 

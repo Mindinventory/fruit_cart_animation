@@ -24,7 +24,7 @@ static void my_application_activate(GApplication* application) {
   // by applications and is the setup most users will be using (e.g. Ubuntu
   // desktop).
   // If running on X and not using GNOME then just use a traditional title bar
-  // in case the window manager does more exotic layout, e.g. tiling.
+  // in case the window Bloc does more exotic layout, e.g. tiling.
   // If running on Wayland assume the header bar will work (may need changing
   // if future cases occur).
   gboolean use_header_bar = TRUE;
@@ -40,11 +40,11 @@ static void my_application_activate(GApplication* application) {
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "add_to_cart_animation");
+    gtk_header_bar_set_title(header_bar, "fruit_cart_animation");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "add_to_cart_animation");
+    gtk_window_set_title(window, "fruit_cart_animation");
   }
 
   gtk_window_set_default_size(window, 1280, 720);
