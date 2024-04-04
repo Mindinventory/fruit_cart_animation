@@ -4,18 +4,17 @@ abstract class ProductEvent {}
 
 class OnIncrementEvent extends ProductEvent {
   final Product product;
-  final List<Product> cartItemList;
 
-  OnIncrementEvent({required this.product, required this.cartItemList});
+  OnIncrementEvent({required this.product});
 }
 
 class OnDecrementEvent extends ProductEvent {
   final Product product;
-  final List<Product> cartItemList;
-
-  OnDecrementEvent({required this.product, required this.cartItemList});
+  OnDecrementEvent({required this.product});
 }
 
-class OnAddingCartEvent extends ProductEvent{
+class OnCartItemDecrementEvent extends ProductEvent {
+  final Product cartItem;
 
+  OnCartItemDecrementEvent({required this.cartItem});
 }

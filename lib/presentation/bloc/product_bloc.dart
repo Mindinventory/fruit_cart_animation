@@ -5,68 +5,54 @@ part 'product_event.dart';
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
+  List<Product> cartItemList = [];
+  double totalPrice = 0.0;
+
   ProductBloc() : super(ProductInitial()) {
     // on<OnIncrementEvent>(increment);
     on<OnDecrementEvent>(_decrement);
     on<OnIncrementEvent>(_increment);
-    on<OnAddingCartEvent>(_cartUpdating);
-    // on<OnUpdatingCartEvent>(UpdateCart);
-    // on<AddMessageEvent>(_addMessage);
-    // on<UpdateMessageEvent>(_updateMessage);
-
-    // void _increment(OnIncrementEvent event, Emitter<ProductState> emit) async {
-    //   try {
-    //
-    //
-    //
-    //
-    //     emit(OnIncrementedState());
-    //   } catch (error) {
-    //     print( error.toString());
-    //   }
-    // }
+    on<OnCartItemDecrementEvent>(_cartDecrement);
   }
 
-  void _increment (OnIncrementEvent event, Emitter<ProductState> emit) async {
+  void _increment(OnIncrementEvent event, Emitter<ProductState> emit) async {
     try {
       event.product.itemInCart = (event.product.itemInCart! + 1);
-      if (!event.cartItemList.contains(event.product)) {
-        emit(CartAddedState(
-          product: event.product,
-          cartItemList: event.cartItemList,
-        ));
-      }
-
-    } catch (error) {
-      print(error.toString());
-    }
-  }
-  void _decrement(OnDecrementEvent event, Emitter<ProductState> emit) async {
-    try {
-      if (event.product.itemInCart! > 0 && event.product.itemInCart! != 0) {
-        event.product.itemInCart = (event.product.itemInCart! - 1);
-
-        if (event.cartItemList.contains(event.product) && event.product.itemInCart! < 1) {
-          event.cartItemList.remove(event.product);
-        }
-      }
-
-      emit(OnDecrementedState(
+      totalPrice = totalPrice + double.parse(event.product.price);
+      emit(CartAddedState(
         product: event.product,
-        cartItemList: event.cartItemList,
       ));
     } catch (error) {
       print(error.toString());
     }
   }
 
-  void _cartUpdating(OnAddingCartEvent event, Emitter<ProductState> emit) async {
+  void _cartDecrement(OnCartItemDecrementEvent event, Emitter<ProductState> emit) async {
     try {
-      emit(OnAddingCartState());
-
+      totalPrice = totalPrice - double.parse(event.cartItem.price);
+      event.cartItem.itemInCart = event.cartItem.itemInCart! - 1;
+      if (event.cartItem.itemInCart == 0) {
+        cartItemList.remove(event.cartItem);
+      }
+      emit(CartUpdatedState());
     } catch (error) {
       print(error.toString());
- }
-}
+    }
+  }
 
+  void _decrement(OnDecrementEvent event, Emitter<ProductState> emit) async {
+    try {
+      if (event.product.itemInCart! > 0 && event.product.itemInCart! != 0) {
+        event.product.itemInCart = (event.product.itemInCart! - 1);
+        totalPrice = totalPrice - double.parse(event.product.price);
+        if (cartItemList.contains(event.product) && event.product.itemInCart! < 1) {
+          cartItemList.remove(event.product);
+        }
+      }
+
+      emit(OnDecrementedState());
+    } catch (error) {
+      print(error.toString());
+    }
+  }
 }
