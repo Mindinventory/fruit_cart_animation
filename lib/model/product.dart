@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'model.g.dart';
+part 'product.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Product {
-  final String name;
-  final String image;
-  final String price;
+   String name;
+   String image;
+   String price;
   int? itemInCart;
   @JsonKey(includeFromJson: false, includeToJson: false)
   GlobalKey key = GlobalKey();

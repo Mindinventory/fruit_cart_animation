@@ -1,4 +1,4 @@
-package com.example.add_to_cart_animation
+package com.example.fruit_cart_animation
 
 import io.flutter.embedding.android.FlutterActivity
 
