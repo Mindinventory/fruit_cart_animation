@@ -4,7 +4,11 @@ abstract class ProductState {}
 
 class ProductInitial extends ProductState {}
 
-class OnDecrementedState extends ProductState {}
+class OnDecrementedState extends ProductState {
+  final int removedProductListLength;
+
+  OnDecrementedState({required this.removedProductListLength});
+}
 
 class CartAddedState extends ProductState {
   final Product product;

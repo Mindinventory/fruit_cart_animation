@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:fruit_cart_animation/common/constants.dart';
 import 'package:fruit_cart_animation/model/product.dart';
 
@@ -35,9 +36,10 @@ void showAnimation(
             translateX = lerpDouble(
                 offset.dx,
                 (cartItem.length == 1
-                    ? (AppConstants.cartPaddingHorizontal + AppConstants.cartMarginWidth)
+                    ? (AppConstants.cartPaddingHorizontal + AppConstants.cartMarginWidth + 20)
                     : (((cartItem.length - 1) * (AppConstants.cardWidth + (2 * AppConstants.cartMarginWidth))) +
-                        (AppConstants.cartPaddingHorizontal + AppConstants.cartMarginWidth))),
+                            (AppConstants.cartPaddingHorizontal + AppConstants.cartMarginWidth)) +
+                        20),
                 animation.value)!;
           } else {
             translateX =
@@ -62,7 +64,7 @@ void showAnimation(
   );
 
   overlayState.insert(overlayEntry);
-  controller.forward(from: 0);
+  controller.animateWith(GravitySimulation(9.8, 0, 1, 0));
 
   animation.addStatusListener((status) {
     if (status == AnimationStatus.completed) {

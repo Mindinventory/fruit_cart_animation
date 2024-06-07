@@ -10,7 +10,8 @@ class OnIncrementEvent extends ProductEvent {
 
 class OnDecrementEvent extends ProductEvent {
   final Product product;
-  OnDecrementEvent({required this.product});
+  final int removedProductListLength;
+  OnDecrementEvent({required this.removedProductListLength, required this.product});
 }
 
 class OnCartItemDecrementEvent extends ProductEvent {
