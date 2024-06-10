@@ -11,5 +11,6 @@ class AppConstants {
   static const cartMarginWidth = 8;
   static const kMargin = EdgeInsets.all(8);
   static const kPadding = EdgeInsets.all(8);
-  static const kProductContainerPadding = EdgeInsets.symmetric(vertical: 10, horizontal: 5);
+  static const kProductContainerPadding =
+      EdgeInsets.symmetric(vertical: 10, horizontal: 5);
 }

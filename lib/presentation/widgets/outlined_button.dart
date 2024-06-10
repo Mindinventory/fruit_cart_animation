@@ -41,12 +41,16 @@ class OutlinedButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
             width: width,
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              border:
-                  placeholder ? null : Border.all(color: !enable ? Colors.grey.shade400 : (borderColor ?? Colors.grey)),
+              border: placeholder
+                  ? null
+                  : Border.all(
+                      color: !enable
+                          ? Colors.grey.shade400
+                          : (borderColor ?? Colors.grey)),
               color: background,
             ),
             alignment: alignment,
@@ -56,7 +60,9 @@ class OutlinedButtonWidget extends StatelessWidget {
                     ? DefaultTextStyle(
                         style: TextStyle(
                                 fontSize: 16,
-                                color: !enable ? Colors.grey : (textColor ?? Colors.black),
+                                color: !enable
+                                    ? Colors.grey
+                                    : (textColor ?? Colors.black),
                                 fontWeight: FontWeight.w500)
                             .copyWith(height: 0.8),
                         child: child!,
@@ -65,7 +71,9 @@ class OutlinedButtonWidget extends StatelessWidget {
                         text!,
                         style: TextStyle(
                                 fontSize: 16,
-                                color: !enable ? Colors.grey : (textColor ?? Colors.black),
+                                color: !enable
+                                    ? Colors.grey
+                                    : (textColor ?? Colors.black),
                                 fontWeight: FontWeight.w500)
                             .copyWith(height: 0.8),
                       ))));

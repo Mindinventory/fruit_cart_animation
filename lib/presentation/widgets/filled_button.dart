@@ -34,7 +34,7 @@ class FilledButtonWidget extends StatelessWidget {
       height: height,
       child: placeholder
           ? Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(12),
@@ -42,13 +42,14 @@ class FilledButtonWidget extends StatelessWidget {
             )
           : ElevatedButton(
               style: ButtonStyle(
-                padding: MaterialStatePropertyAll(padding ?? EdgeInsets.zero),
+                padding: WidgetStatePropertyAll(padding ?? EdgeInsets.zero),
                 enableFeedback: enable,
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
                 ),
-                elevation: !enable ? const MaterialStatePropertyAll(0) : null,
-                backgroundColor: MaterialStateProperty.all(fillColor),
+                elevation: !enable ? const WidgetStatePropertyAll(0) : null,
+                backgroundColor: WidgetStateProperty.all(fillColor),
               ),
               onPressed: onTap,
               child: AnimatedContainer(
@@ -61,7 +62,9 @@ class FilledButtonWidget extends StatelessWidget {
                   text,
                   style: TextStyle(
                           fontSize: 16,
-                          color: !enable ? Colors.grey : (textColor ?? Colors.black),
+                          color: !enable
+                              ? Colors.grey
+                              : (textColor ?? Colors.black),
                           fontWeight: FontWeight.w500)
                       .copyWith(height: 0.8),
                 ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruit_cart_animation/model/product.dart';
 
@@ -23,11 +24,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         product: event.product,
       ));
     } catch (error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
     }
   }
 
-  void _cartDecrement(OnCartItemDecrementEvent event, Emitter<ProductState> emit) async {
+  void _cartDecrement(
+      OnCartItemDecrementEvent event, Emitter<ProductState> emit) async {
     try {
       totalPrice = totalPrice - double.parse(event.cartItem.price);
       event.cartItem.itemInCart = event.cartItem.itemInCart! - 1;
@@ -36,7 +40,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
       emit(CartUpdatedState());
     } catch (error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
     }
   }
 
@@ -45,14 +51,18 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (event.product.itemInCart! > 0 && event.product.itemInCart! != 0) {
         event.product.itemInCart = (event.product.itemInCart! - 1);
         totalPrice = totalPrice - double.parse(event.product.price);
-        if (cartItemList.contains(event.product) && event.product.itemInCart! < 1) {
+        if (cartItemList.contains(event.product) &&
+            event.product.itemInCart! < 1) {
           cartItemList.remove(event.product);
         }
       }
 
-      emit(OnDecrementedState(removedProductListLength: event.removedProductListLength));
+      emit(OnDecrementedState(
+          removedProductListLength: event.removedProductListLength));
     } catch (error) {
-      print(error.toString());
+      if (kDebugMode) {
+        print(error.toString());
+      }
     }
   }
 }

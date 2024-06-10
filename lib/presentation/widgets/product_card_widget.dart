@@ -19,7 +19,8 @@ class CustomProductCard extends StatefulWidget {
   State<CustomProductCard> createState() => _CustomProductCardState();
 }
 
-class _CustomProductCardState extends State<CustomProductCard> with TickerProviderStateMixin {
+class _CustomProductCardState extends State<CustomProductCard>
+    with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation animation;
   late Product product;
@@ -28,7 +29,8 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
   @override
   void initState() {
     _productBloc = context.read<ProductBloc>();
-    controller = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1500), vsync: this);
     animation = Tween(begin: 0, end: 1).animate(controller);
     product = widget.product;
     super.initState();
@@ -51,7 +53,9 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
             decoration: BoxDecoration(
               border: Border(
                   bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                  right: widget.index % 2 != 0 ? BorderSide.none : BorderSide(color: Colors.grey.withOpacity(0.3))),
+                  right: widget.index % 2 != 0
+                      ? BorderSide.none
+                      : BorderSide(color: Colors.grey.withOpacity(0.3))),
               color: Colors.white,
             ),
             child: Column(
@@ -81,11 +85,16 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                             Text(
                               overflow: TextOverflow.ellipsis,
                               product.name,
-                              style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                             Text(
                               "₹ ${product.price}/KG",
-                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -105,7 +114,8 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                                 onTap: () {
                                   _productBloc.add(OnDecrementEvent(
                                       product: widget.product,
-                                      removedProductListLength: widget.removedProductListLength));
+                                      removedProductListLength:
+                                          widget.removedProductListLength));
                                 },
                                 child: const Icon(
                                   Icons.remove,
@@ -113,16 +123,21 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                                   size: 16,
                                 )),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Colors.white),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 3, vertical: 2),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: Colors.white),
                               child: Text(
                                 product.itemInCart.toString(),
-                                style: const TextStyle(color: Colors.black, fontSize: 12),
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 8),
                               ),
                             ),
                             InkWell(
                                 onTap: () {
-                                  _productBloc.add(OnIncrementEvent(product: widget.product));
+                                  _productBloc.add(OnIncrementEvent(
+                                      product: widget.product));
                                 },
                                 child: const Icon(
                                   Icons.add,
