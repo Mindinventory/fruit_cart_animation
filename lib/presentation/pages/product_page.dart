@@ -62,9 +62,9 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: Column(
             children: [
@@ -137,228 +137,227 @@ class _ProductPageState extends State<ProductPage> with TickerProviderStateMixin
             ],
           ),
         ),
-        bottomNavigationBar: BlocBuilder(
-          bloc: _productBloc,
-          builder: (context, state) {
-            return Container(
-              clipBehavior: Clip.hardEdge,
-              height: _productBloc.cartItemList.isNotEmpty
-                  ? MediaQuery.of(context).size.height / 4
-                  : MediaQuery.of(context).size.height / 8,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey.withOpacity(0.4)),
-              child: Align(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_productBloc.cartItemList.isNotEmpty)
-                      Expanded(
-                        child: ListView.builder(
-                          controller: scrollController,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _productBloc.cartItemList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            cartLength = index == 0
-                                ? ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)
-                                : (((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth) +
-                                    (index * ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)) +
-                                    AppConstants.cardWidth);
+      ),
+      bottomNavigationBar: BlocBuilder(
+        bloc: _productBloc,
+        builder: (context, state) {
+          return Container(
+            height: _productBloc.cartItemList.isNotEmpty
+                ? MediaQuery.of(context).size.height / 4
+                : MediaQuery.of(context).size.height / 8,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.grey.withOpacity(0.4)),
+            child: Align(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_productBloc.cartItemList.isNotEmpty)
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _productBloc.cartItemList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          cartLength = index == 0
+                              ? ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)
+                              : (((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth) +
+                                  (index * ((2 * AppConstants.cartMarginWidth) + AppConstants.cardWidth)) +
+                                  AppConstants.cardWidth);
 
-                            return removedProductItemList.contains(_productBloc.cartItemList[index])
-                                ? TweenAnimationBuilder(
-                                    tween: Tween<double>(begin: 1, end: 0),
-                                    onEnd: () {
-                                      removedProductItemList.remove(_productBloc.cartItemList[index]);
-                                      _productBloc
-                                          .add(OnCartItemDecrementEvent(cartItem: _productBloc.cartItemList[index]));
-                                    },
-                                    duration: const Duration(milliseconds: 450),
-                                    builder: (context, value, child) {
-                                      return SizedBox(
-                                        width: 86 * value,
-                                      );
-                                    },
-                                  )
-                                : AnimatedBuilder(
-                                    animation: animation,
-                                    builder: (context, child) {
-                                      double dx = lerpDouble(-86, 0, animation.value)!;
+                          return removedProductItemList.contains(_productBloc.cartItemList[index])
+                              ? TweenAnimationBuilder(
+                                  tween: Tween<double>(begin: 1, end: 0),
+                                  onEnd: () {
+                                    removedProductItemList.remove(_productBloc.cartItemList[index]);
+                                    _productBloc
+                                        .add(OnCartItemDecrementEvent(cartItem: _productBloc.cartItemList[index]));
+                                  },
+                                  duration: const Duration(milliseconds: 450),
+                                  builder: (context, value, child) {
+                                    return SizedBox(
+                                      width: 86 * value,
+                                    );
+                                  },
+                                )
+                              : AnimatedBuilder(
+                                  animation: animation,
+                                  builder: (context, child) {
+                                    double dx = lerpDouble(-86, 0, animation.value)!;
 
-                                      return Transform.translate(
-                                        offset: controller.value != 1 && _productBloc.cartItemList.length - 1 == index
-                                            ? Offset(dx, 0)
-                                            : const Offset(0, 0),
-                                        child: Snappable(
-                                          key: GlobalObjectKey(_productBloc.cartItemList[index]),
-                                          duration: const Duration(seconds: 1, milliseconds: 500),
-                                          onSnapped: () {
-                                            removedProductItemList.add(_productBloc.cartItemList[index]);
-                                            setState(() {});
-                                          },
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                width: 70,
-                                                height: 70,
-                                                margin: const EdgeInsets.symmetric(horizontal: 8),
-                                                padding: const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                                child: (controller.value != 1 &&
-                                                        _productBloc.cartItemList.length - 1 == index)
-                                                    ? const Offstage()
-                                                    : Image.asset(
-                                                        _productBloc.cartItemList[index].image,
-                                                        height: 50,
-                                                        width: 50,
-                                                      ),
+                                    return Transform.translate(
+                                      offset: controller.value != 1 && _productBloc.cartItemList.length - 1 == index
+                                          ? Offset(dx, 0)
+                                          : const Offset(0, 0),
+                                      child: Snappable(
+                                        key: GlobalObjectKey(_productBloc.cartItemList[index]),
+                                        duration: const Duration(seconds: 1, milliseconds: 500),
+                                        onSnapped: () {
+                                          removedProductItemList.add(_productBloc.cartItemList[index]);
+                                          setState(() {});
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              width: 70,
+                                              height: 70,
+                                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12),
                                               ),
-                                              Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                child: Opacity(
-                                                  opacity: _productBloc.cartItemList.length - 1 == index
-                                                      ? controller.value
-                                                      : 1,
-                                                  child: CircularIconButton(
-                                                    onTap: () {
-                                                      if (_productBloc.cartItemList[index].itemInCart == 1) {
-                                                        (GlobalObjectKey(_productBloc.cartItemList[index]).currentState
-                                                                as SnappableState)
-                                                            .snap()
-                                                            .then((value) {});
-                                                      } else if (_productBloc.cartItemList[index].itemInCart! > 0) {
-                                                        _productBloc.add(OnCartItemDecrementEvent(
-                                                            cartItem: _productBloc.cartItemList[index]));
-                                                      }
-                                                    },
-                                                    decorationColor: Colors.white,
-                                                    child: const Icon(
-                                                      Icons.remove_circle,
-                                                      size: 16,
-                                                      color: Colors.red,
+                                              child: (controller.value != 1 &&
+                                                      _productBloc.cartItemList.length - 1 == index)
+                                                  ? const Offstage()
+                                                  : Image.asset(
+                                                      _productBloc.cartItemList[index].image,
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
+                                            ),
+                                            Positioned(
+                                              top: 0,
+                                              left: 0,
+                                              child: Opacity(
+                                                opacity: _productBloc.cartItemList.length - 1 == index
+                                                    ? controller.value
+                                                    : 1,
+                                                child: CircularIconButton(
+                                                  onTap: () {
+                                                    if (_productBloc.cartItemList[index].itemInCart == 1) {
+                                                      (GlobalObjectKey(_productBloc.cartItemList[index]).currentState
+                                                              as SnappableState)
+                                                          .snap()
+                                                          .then((value) {});
+                                                    } else if (_productBloc.cartItemList[index].itemInCart! > 0) {
+                                                      _productBloc.add(OnCartItemDecrementEvent(
+                                                          cartItem: _productBloc.cartItemList[index]));
+                                                    }
+                                                  },
+                                                  decorationColor: Colors.white,
+                                                  child: const Icon(
+                                                    Icons.remove_circle,
+                                                    size: 16,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 35,
+                                              bottom: 0,
+                                              child: Opacity(
+                                                opacity: _productBloc.cartItemList.length - 1 == index
+                                                    ? controller.value
+                                                    : 1,
+                                                child: CircularIconButton(
+                                                  decorationColor: Colors.black87,
+                                                  onTap: () {},
+                                                  child: Align(
+                                                    alignment: Alignment.bottomCenter,
+                                                    child: Text(
+                                                      _productBloc.cartItemList[index].itemInCart.toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              Positioned(
-                                                right: 35,
-                                                bottom: 0,
-                                                child: Opacity(
-                                                  opacity: _productBloc.cartItemList.length - 1 == index
-                                                      ? controller.value
-                                                      : 1,
-                                                  child: CircularIconButton(
-                                                    decorationColor: Colors.black87,
-                                                    onTap: () {},
-                                                    child: Align(
-                                                      alignment: Alignment.bottomCenter,
-                                                      child: Text(
-                                                        _productBloc.cartItemList[index].itemInCart.toString(),
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                  );
-                          },
-                        ),
-                      )
-                    else
-                      const Offstage(),
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 8,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                          color: Colors.white.withOpacity(0.4)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          OutlinedButtonWidget(
-                            height: 50,
-                            width: MediaQuery.of(context).size.width / 2.4,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(
-                                  Icons.shopping_cart,
-                                  color: Colors.black87,
-                                  size: 20,
-                                ),
-                                Text('View Cart'),
-                              ],
-                            ),
-                          ),
-
-                          FilledButtonWidget(
-                            fillColor: const Color(0xff70CB8D),
-                            height: 50,
-                            width: MediaQuery.of(context).size.width / 2.4,
-                            enable: true,
-                            text: 'Pay : ₹ ${_productBloc.totalPrice}',
-                          )
-                          // Container(
-                          //   padding: const EdgeInsets.all(10),
-                          //   height: 40,
-                          //   width: MediaQuery.of(context).size.width / 2.4,
-                          //   decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
-                          //   child: const Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          //     children: [
-                          //       Icon(
-                          //         Icons.shopping_cart,
-                          //         color: Colors.black87,
-                          //         size: 20,
-                          //       ),
-                          //       Text('View Cart'),
-                          //     ],
-                          //   ),
-                          // ),
-                          // Container(
-                          //   padding: const EdgeInsets.all(10),
-                          //   height: 40,
-                          //   width: MediaQuery.of(context).size.width / 2.4,
-                          //   decoration: BoxDecoration(
-                          //     color: Color(0xff70CB8D),
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          //     children: [
-                          //       const Text('Pay'),
-                          //       const Spacer(),
-                          //       Text("₹ ${_productBloc.totalPrice}"),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                        },
                       ),
+                    )
+                  else
+                    const Offstage(),
+                  Container(
+                    clipBehavior: Clip.hardEdge,
+                    padding: const EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 8,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                        color: Colors.white.withOpacity(0.4)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OutlinedButtonWidget(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width / 2.4,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(
+                                Icons.shopping_cart,
+                                color: Colors.black87,
+                                size: 20,
+                              ),
+                              Text('View Cart'),
+                            ],
+                          ),
+                        ),
+
+                        FilledButtonWidget(
+                          fillColor: const Color(0xff70CB8D),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width / 2.4,
+                          enable: true,
+                          text: 'Pay : ₹ ${_productBloc.totalPrice}',
+                        )
+                        // Container(
+                        //   padding: const EdgeInsets.all(10),
+                        //   height: 40,
+                        //   width: MediaQuery.of(context).size.width / 2.4,
+                        //   decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
+                        //   child: const Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //     children: [
+                        //       Icon(
+                        //         Icons.shopping_cart,
+                        //         color: Colors.black87,
+                        //         size: 20,
+                        //       ),
+                        //       Text('View Cart'),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(10),
+                        //   height: 40,
+                        //   width: MediaQuery.of(context).size.width / 2.4,
+                        //   decoration: BoxDecoration(
+                        //     color: Color(0xff70CB8D),
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //     children: [
+                        //       const Text('Pay'),
+                        //       const Spacer(),
+                        //       Text("₹ ${_productBloc.totalPrice}"),
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

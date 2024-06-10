@@ -63,6 +63,7 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                     key: product.key,
                     product.image,
                     height: AppConstants.productImageHeight,
+                    width: 75,
                   ),
                 ),
                 const SizedBox(
