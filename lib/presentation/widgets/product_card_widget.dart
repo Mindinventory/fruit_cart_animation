@@ -6,10 +6,13 @@ import 'package:fruit_cart_animation/presentation/bloc/product_bloc.dart';
 
 class CustomProductCard extends StatefulWidget {
   final Product product;
-
+  final int index;
+  final int removedProductListLength;
   const CustomProductCard({
     super.key,
     required this.product,
+    required this.index,
+    required this.removedProductListLength,
   });
 
   @override
@@ -46,7 +49,9 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
           child: Container(
             padding: AppConstants.kProductContainerPadding,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+              border: Border(
+                  bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                  right: widget.index % 2 != 0 ? BorderSide.none : BorderSide(color: Colors.grey.withOpacity(0.3))),
               color: Colors.white,
             ),
             child: Column(
@@ -58,10 +63,11 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                     key: product.key,
                     product.image,
                     height: AppConstants.productImageHeight,
+                    width: 75,
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -77,12 +83,9 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                               product.name,
                               style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
                             Text(
                               "₹ ${product.price}/KG",
-                              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -100,7 +103,9 @@ class _CustomProductCardState extends State<CustomProductCard> with TickerProvid
                           children: [
                             InkWell(
                                 onTap: () {
-                                  _productBloc.add(OnDecrementEvent(product: widget.product));
+                                  _productBloc.add(OnDecrementEvent(
+                                      product: widget.product,
+                                      removedProductListLength: widget.removedProductListLength));
                                 },
                                 child: const Icon(
                                   Icons.remove,

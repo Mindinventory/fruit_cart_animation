@@ -50,7 +50,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         }
       }
 
-      emit(OnDecrementedState());
+      emit(OnDecrementedState(removedProductListLength: event.removedProductListLength));
     } catch (error) {
       print(error.toString());
     }
