@@ -10,7 +10,8 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       name: json['name'] as String,
       image: json['image'] as String,
       price: json['price'] as String,
-      itemInCart: json['itemInCart'] as int?,
+      itemInCart: (json['itemInCart'] as num?)?.toInt(),
+      backgroundColorCode: (json['backgroundColorCode'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'image': instance.image,
       'price': instance.price,
       'itemInCart': instance.itemInCart,
+      'backgroundColorCode': instance.backgroundColorCode,
     };
