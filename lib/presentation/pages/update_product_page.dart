@@ -86,84 +86,23 @@ class _UpdateProductPageState extends State<UpdateProductPage> with TickerProvid
               SliverAppBar(
                 pinned: true,
                 floating: true,
-                clipBehavior: Clip.hardEdge,
+                snap: true,
                 primary: true,
                 expandedHeight: MediaQuery.of(context).viewPadding.top + 78,
-                toolbarHeight: 78,
-                backgroundColor: const Color(0xffFFD3A1).withOpacity(0.25),
-                leadingWidth: Dimens.h200,
-                actions: [
-                  ListenableBuilder(
-                    listenable: sliverScrollController,
-                    builder: (context, child) {
-                      double calcOpacity = (1 - (sliverScrollController.offset / 78)).clamp(0, 1);
-                      debugPrint('$calcOpacity');
-                      return Opacity(
-                        opacity: calcOpacity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  height: Dimens.h44,
-                                  width: Dimens.w44,
-                                  decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                      image: AssetImage('assets/girl.png'),
-                                    ),
-                                    borderRadius: BorderRadius.circular(Dimens.r12),
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  child: Container(
-                                    width: Dimens.w12,
-                                    height: Dimens.h12,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xffF79D36),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: Dimens.w2,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: Dimens.w8, right: Dimens.w16),
-                              height: Dimens.h44,
-                              width: Dimens.w44,
-                              decoration: BoxDecoration(
-                                color: const Color(0xff222222),
-                                borderRadius: BorderRadius.circular(Dimens.r12),
-                              ),
-                              padding: EdgeInsets.all(Dimens.h12),
-                              child: Image.asset(
-                                'assets/icons/bell.png',
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-                leading: ListenableBuilder(
-                  listenable: sliverScrollController,
-                  builder: (context, child) {
-                    double calcOpacity = (1 - (sliverScrollController.offset / 78)).clamp(0, 1);
-                    return Opacity(
-                      opacity: calcOpacity,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: Dimens.w16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: Text(
+                backgroundColor: const Color(0xfffff6ed),
+                surfaceTintColor: Colors.transparent,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    color: const Color(0xfffff6ed),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + Dimens.h12,
+                          left: 16,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 'Deliver To',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
@@ -171,10 +110,8 @@ class _UpdateProductPageState extends State<UpdateProductPage> with TickerProvid
                                   color: const Color(0xff888888),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: Dimens.h2),
-                            Flexible(
-                              child: Row(
+                              SizedBox(height: Dimens.h2),
+                              Row(
                                 children: [
                                   Text(
                                     'Andheri, Mumbai',
@@ -192,20 +129,61 @@ class _UpdateProductPageState extends State<UpdateProductPage> with TickerProvid
                                     height: Dimens.h16,
                                   )
                                 ],
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                flexibleSpace: Container(
-                  height: double.maxFinite,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: Image.asset('assets/whiteBackground.png').image,
-                      fit: BoxFit.cover,
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + Dimens.h12,
+                          right: 0,
+                          child: Row(
+                            children: [
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: Dimens.h44,
+                                    width: Dimens.w44,
+                                    decoration: BoxDecoration(
+                                      image: const DecorationImage(
+                                        image: AssetImage('assets/girl.png'),
+                                      ),
+                                      borderRadius: BorderRadius.circular(Dimens.r12),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    child: Container(
+                                      width: Dimens.w12,
+                                      height: Dimens.h12,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xffF79D36),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: Dimens.w2,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: Dimens.w8, right: Dimens.w16),
+                                height: Dimens.h44,
+                                width: Dimens.w44,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff222222),
+                                  borderRadius: BorderRadius.circular(Dimens.r12),
+                                ),
+                                padding: EdgeInsets.all(Dimens.h12),
+                                child: Image.asset(
+                                  'assets/icons/bell.png',
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -526,48 +504,6 @@ class _UpdateProductPageState extends State<UpdateProductPage> with TickerProvid
                             ],
                           ),
                         )
-                        /*Container(
-                          clipBehavior: Clip.hardEdge,
-                          padding: const EdgeInsets.all(20),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 8,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                              color: Colors.white.withOpacity(0.4)),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: OutlinedButtonWidget(
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width / 2.4,
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(
-                                        Icons.shopping_cart,
-                                        color: Colors.black87,
-                                        size: 20,
-                                      ),
-                                      Text('View Cart'),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Flexible(
-                                child: FilledButtonWidget(
-                                  fillColor: const Color(0xff70CB8D),
-                                  height: 50,
-                                  width: MediaQuery.of(context).size.width / 2.4,
-                                  enable: true,
-                                  text: 'Pay : ₹ ${_productBloc.totalPrice}',
-                                ),
-                              )
-                            ],
-                          ),
-                        ),*/
                       ],
                     ),
                   ),
@@ -653,5 +589,5 @@ class AppBarBottomSearchWidget extends StatelessWidget implements PreferredSizeW
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(Dimens.h100);
+  Size get preferredSize => Size.fromHeight(Dimens.h98);
 }

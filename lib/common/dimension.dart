@@ -25,6 +25,7 @@ class Dimens {
   static double h76 = 76.h;
   static double h78 = 78.h;
   static double h80 = 80.h;
+  static double h98 = 98.h;
   static double h100 = 100.h;
   static double h108 = 108.h;
   static double h118 = 118.h;
