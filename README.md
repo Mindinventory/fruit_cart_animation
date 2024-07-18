@@ -12,7 +12,8 @@ This demo demonstrates how to implement a smooth and engaging "Add to Cart" anim
 - **Interactive Cart Animation**: An elegant animation that simulates adding items to a shopping cart.
 - **Smooth UI/UX**: Provides a seamless and visually appealing user experience.
 
-![Image Plugin](https://github.com/Mindinventory/fruit_cart_animation/blob/dev/manish/assets/flutter_fruit_cart_animations.gif)
+
+<img  src="https://github.com/Mindinventory/fruit_cart_animation/blob/main/assets/flutter_fruit_cart_animations.gif?raw=true"  width="250" height=500/>
 
 Dribbble Link: https://dribbble.com/shots/23220246-Adding-To-Cart-Cart-Tray
 
